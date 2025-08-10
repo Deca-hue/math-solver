@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step-by-Step Math Solver</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6">
+
+<h1 class="text-3xl font-bold mb-6 text-teal-400">Step-by-Step Math Solver</h1>
+
+<div class="w-full max-w-xl bg-gray-800 rounded-lg p-6 shadow-lg">
+  <label for="expression" class="block mb-2 font-semibold">Enter a Math Expression or Equation:</label>
+  <input id="expression" type="text" placeholder="e.g. 2(x+3) = 4(x-1) or 0.5x+1=2"
+         class="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-teal-400">
+
+  <button onclick="solveExpression()" class="mt-4 w-full bg-teal-500 hover:bg-teal-400 text-black font-bold py-2 rounded">
+    Solve
+  </button>
+</div>
+
+<div id="stepsContainer" class="w-full max-w-xl mt-6 space-y-3"></div>
+
+<script>
+function solveExpression() {
+  const exprInput = document.getElementById('expression').value.trim();
+  const stepsContainer = document.getElementById('stepsContainer');
+  stepsContainer.innerHTML = "";
+
+  if (!exprInput) {
+    showStep("Please enter an expression.");
+    return;
+  }
+
+  const mode = detectMode(exprInput);
+
+  if (mode === "reject") {
+    showStep("Sorry, I can only solve arithmetic or single-variable equations right now.");
+    return;
+  }
+
+  if (mode === "equation") {
+    try {
+      const steps = solveEquation(exprInput);
+      steps.forEach((s, i) => {
+        const isFinal = i === steps.length - 1;
+        showStep((isFinal ? "Final Answer: " : `Step ${i+1}: `) + s, isFinal);
+      });
+    } catch (e) {
+      showStep("Error: " + e.message);
+    }
+    return;
+  }
+
+  // Arithmetic mode
+  try {
+    let expr = normalizeExpression(exprInput);
+    const steps = evaluateStepByStep(expr);
+    steps.forEach((s, i) => {
+      const isFinal = i === steps.length - 1;
+      showStep((isFinal ? "Final Answer: " : `Step ${i+1}: `) + s, isFinal);
+    });
+  } catch (e) {
+    showStep("Error: " + e.message);
+  }
+}
+
+function detectMode(input) {
+  // Remove spaces for checking
+  const clean = input.replace(/\s+/g, '');
+
+  if (!clean.includes('=')) {
+    return "arithmetic";
+  }
+
+  // Ignore code-like comparisons
+  if (/==|>=|<=/.test(clean)) {
+    return "arithmetic";
+  }
+
+  const parts = clean.split('=');
+  if (parts.length !== 2) {
+    return "reject"; // malformed
+  }
+
+  const leftVars = [...parts[0].matchAll(/[a-zA-Z]/g)].map(m => m[0]);
+  const rightVars = [...parts[1].matchAll(/[a-zA-Z]/g)].map(m => m[0]);
+  const allVars = Array.from(new Set([...leftVars, ...rightVars]));
+
+  if (allVars.length === 0) {
+    return "arithmetic"; // pure numbers equation
+  }
+
+  if (allVars.length === 1 && /^[a-zA-Z]$/.test(allVars[0])) {
+    return "equation"; // single variable
+  }
+
+  return "reject"; // multiple vars or unknown variables
+}
+
+function showStep(text, isFinal = false) {
+  const stepsContainer = document.getElementById('stepsContainer');
+  const div = document.createElement('div');
+  div.className = "bg-gray-800 p-3 rounded border border-gray-700";
+  if (isFinal) div.className += " text-2xl font-bold text-green-400";
+  div.textContent = text;
+  stepsContainer.appendChild(div);
+}
+
+function normalizeExpression(expr) {
+  expr = expr.replace(/\s+/g, '');
+  expr = expr.replace(/\)\(/g, ')*(');
+  expr = expr.replace(/(\d)(\()/g, '$1*(');
+  expr = expr.replace(/(\))(\d)/g, '$1*$2');
+  expr = expr.replace(/^\+/, '');
+  return expr;
+}
+
+function expandExpression(expr) {
+  expr = normalizeExpression(expr);
+  let pattern = /(-?\d*\.?\d*)\(([^\(\)]+)\)/;
+  while (pattern.test(expr)) {
+    expr = expr.replace(pattern, (_, coef, inner) => {
+      coef = coef === '' || coef === '+' ? 1 : coef === '-' ? -1 : parseFloat(coef);
+      let parts = inner.split(/(?=[+\-])/);
+      parts = parts.map(term => {
+        if (term.includes('x')) {
+          let num = term.replace('x', '');
+          num = num === '' || num === '+' ? 1 : num === '-' ? -1 : parseFloat(num);
+          return (coef * num) + "x";
+        } else {
+          return (coef * parseFloat(term)) + "";
+        }
+      });
+      return parts.join('');
+    });
+  }
+  return expr;
+}
+
+function collectTerms(expr) {
+  let terms = expr.match(/[+\-]?\d*\.?\d*x?/g).filter(Boolean);
+  let coefX = 0, constant = 0;
+  terms.forEach(term => {
+    if (term.includes('x')) {
+      let num = term.replace('x', '');
+      num = num === '' || num === '+' ? 1 : num === '-' ? -1 : parseFloat(num);
+      coefX += num;
+    } else {
+      constant += parseFloat(term);
+    }
+  });
+  return { coefX, constant };
+}
+
+function decimalToFraction(num, tolerance = 1e-10) {
+  if (Number.isInteger(num)) return null; // skip fraction if whole number
+  let sign = num < 0 ? -1 : 1;
+  num = Math.abs(num);
+  let lower_n = 0, lower_d = 1;
+  let upper_n = 1, upper_d = 0;
+  while (true) {
+    let middle_n = lower_n + upper_n;
+    let middle_d = lower_d + upper_d;
+    if (middle_d * (num + tolerance) < middle_n) {
+      upper_n = middle_n;
+      upper_d = middle_d;
+    } else if (middle_n < (num - tolerance) * middle_d) {
+      lower_n = middle_n;
+      lower_d = middle_d;
+    } else {
+      return `${sign * middle_n}/${middle_d}`;
+    }
+  }
+}
+
+function solveEquation(equation) {
+  let steps = [];
+  let [left, right] = equation.split('=').map(s => s.trim());
+  steps.push(`Original equation: ${equation}`);
+
+  left = expandExpression(left);
+  right = expandExpression(right);
+  steps.push(`Expanded: ${left} = ${right}`);
+
+  let L = collectTerms(left);
+  let R = collectTerms(right);
+  steps.push(`Collected terms: (${L.coefX})x + (${L.constant}) = (${R.coefX})x + (${R.constant})`);
+
+  let coef = L.coefX - R.coefX;
+  let constant = R.constant - L.constant;
+  steps.push(`Move x terms to one side and constants to the other: ${coef}x = ${constant}`);
+
+  if (coef === 0) {
+    if (constant === 0) {
+      steps.push("Infinite solutions (identity).");
+    } else {
+      steps.push("No solution (contradiction).");
+    }
+  } else {
+    let xVal = constant / coef;
+    let frac = decimalToFraction(xVal);
+    steps.push(`x = ${xVal}${frac ? " (" + frac + ")" : ""}`);
+  }
+
+  return steps;
+}
+
+function evaluateStepByStep(expression) {
+  let expr = expression;
+  const steps = [expr];
+
+  const applyOp = (pattern, fn) => {
+    while (pattern.test(expr)) {
+      expr = expr.replace(pattern, (match, a, op, b) => {
+        a = parseFloat(a); b = parseFloat(b);
+        let result = fn(a, op, b);
+        let frac = decimalToFraction(result);
+        steps.push(`${match} = ${result}${frac ? " (" + frac + ")" : ""}`);
+        return result;
+      });
+    }
+  };
+
+  let expPattern = /(-?\d+(?:\.\d+)?)\^(-?\d+(?:\.\d+)?)/;
+  applyOp(expPattern, (a, _, b) => Math.pow(a, b));
+
+  let parenPattern = /\(([^\(\)]+)\)/;
+  while (parenPattern.test(expr)) {
+    expr = expr.replace(parenPattern, (_, inner) => {
+      const innerSteps = evaluateStepByStep(inner);
+      innerSteps.slice(1).forEach(step => steps.push(step));
+      return innerSteps[innerSteps.length - 1];
+    });
+  }
+
+  let mulDivPattern = /(-?\d+(?:\.\d+)?)([*/%])(-?\d+(?:\.\d+)?)/;
+  applyOp(mulDivPattern, (a, op, b) => op === '*' ? a * b : op === '/' ? a / b : a % b);
+
+  let addSubPattern = /(-?\d+(?:\.\d+)?)([+\-])(-?\d+(?:\.\d+)?)/;
+  applyOp(addSubPattern, (a, op, b) => op === '+' ? a + b : a - b);
+
+  return steps;
+}
+</script>
+
+</body>
+</html>
