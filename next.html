@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GHOST | Soft Clay UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    body {
+      background: #1f2937; /* dark slate */
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+  @keyframes lights {
+     0%, 100% { color: #a78bfa; text-shadow: 0 0 8px #a78bfa, 0 0 16px #c4b5fd; }
+    20% { color: #f472b6; text-shadow: 0 0 8px #f472b6, 0 0 16px #f9a8d4; }
+    40% { color: #34d399; text-shadow: 0 0 8px #34d399, 0 0 16px #6ee7b7; }
+    60% { color: #60a5fa; text-shadow: 0 0 8px #60a5fa, 0 0 16px #93c5fd; }
+    80% { color: #fbbf24; text-shadow: 0 0 8px #fbbf24, 0 0 16px #fde68a; }
+ } 
+  .lights-effect {
+      animation: lights 2.5s linear infinite;
+    }
+    .neumorphic {
+      background: #1f2937;
+      box-shadow: 8px 8px 16px #0e121b, -8px -8px 16px #303f59;
+      border-radius: 2rem;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .neumorphic:active {
+      box-shadow: inset 4px 4px 8px #0e121b, inset -4px -4px 8px #303f59;
+      transform: scale(0.97);
+    }
+
+    .neumorphic-nav {
+      box-shadow: inset 4px 4px 12px #0e121b, inset -4px -4px 12px #303f59;
+      border-radius: 3rem;
+    }
+
+    .blob {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg,#7F3DFF,#E53E3E);
+      animation: morph 8s ease-in-out infinite;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+    @keyframes morph {
+      0%,100% { border-radius:42% 58% 62% 38%/40% 51% 49% 60%; }
+      50% { border-radius:58% 42% 38% 62%/60% 49% 51% 40%; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- 🔷 Navbar -->
+  <nav class="neumorphic-nav max-w-xl mx-auto mt-6 px-6 py-3 flex gap-4 justify-center bg-[#1f2937]">
+    <button class="neumorphic px-5 py-2 font-medium">Home</button>
+    <button  onclick="document.getElementById(`projects`).scrollIntoView({ behavior: 'smooth' });" class="neumorphic px-5 py-2 font-medium">Projects</button>
+    <button class="neumorphic px-5 py-2 font-medium">About</button>
+    <button onclick="document.getElementById(`contact`).scrollIntoView({behavior:`smooth`});"class="neumorphic px-5 py-2 font-medium">Contact</button>
+    <button onclick="toggleDarkMode()" class="neumorphic px-3 py-2">🌗</button>
+  </nav>
+
+  <!-- 🧠 Hero Section -->
+  <section class="text-center mt-20 px-4">
+    <h1 class="text-4xl md:text-6xl font-bold mb-4">Hey, I'm <span class="lights-effect">GHOST</span></h1>
+    <p class="text-gray-300 text-lg max-w-xl mx-auto">
+      I build smooth, futuristic UIs with a soft touch — blending modern design and functionality. Let’s build the next big thing.
+    </p>
+    <a href="#projects" class="inline-block mt-8 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-full transition">
+      See My Work
+    </a>
+  </section>
+
+  <!-- 🛠 Projects Section -->
+  <section id="projects" class="mt-24 px-6 max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-10">Featured Projects</h2>
+
+    <div class="grid gap-8 md:grid-cols-3">
+      <!-- Project 1 -->
+      <div class="neumorphic p-6 rounded-2xl">
+        <h3 class="text-xl font-semibold mb-2">Mad Navbar UI</h3>
+        <p class="text-gray-400 mb-4">A soft clay-inspired navigation bar with pop-in ripple effect. Built for experimental UI lovers.</p>
+        <a href="#" class="text-purple-400 hover:underline">View Demo</a>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="neumorphic p-6 rounded-2xl">
+        <h3 class="text-xl font-semibold mb-2">3D Portfolio Playground</h3>
+        <p class="text-gray-400 mb-4">Interactive 3D CSS/Tailwind portfolio with shape animations and object cloning.</p>
+        <a href="#" class="text-purple-400 hover:underline">View Demo</a>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="neumorphic p-6 rounded-2xl">
+        <h3 class="text-xl font-semibold mb-2">VR Adventure World</h3>
+        <p class="text-gray-400 mb-4">Built using A-Frame and JS, this mini world includes portals, NPCs, and quests in 360°.</p>
+        <a href="#" class="text-purple-400 hover:underline">Enter World</a>
+      
+
+        <!-- Project 4 -->
+    </div>
+      <div class="neumorphic p-6 rounded-2xl">
+        <h3 class="text-xl font-semibold mb-2">AI Chat Assistant</h3>
+        <p class="text-gray-400 mb-4">Neumorphic design system built using Tailwind.</p>
+        <a href="#" class="text-purple-400 hover:underline"> chat</a>
+      </div>
+   
+
+    <!-- Project 5 -->
+     <div class="neumorphic p-6 rounded-2xl">
+        <h3 class="text-xl font-semibold mb-2">VR Puzzle Adventure</h3>
+        <p class="text-gray-400 mb-4">WebXR experience with interactive puzzles.</p>
+        <a href="#" class="text-purple-400 hover:underline"> explore</a>
+      </div>
+    
+
+    <!-- Project 6 -->
+      <div class="neumorphic p-6 rounded-2xl">
+        <h3 class="text-xl font-semibold mb-2">Soft Clay UI Kit</h3>
+        <p class="text-gray-400 mb-4">Voice‑enabled chat UI powered by GPT.</p>
+        <a href="#" class="text-purple-400 hover:underline"> voice-chat</a>
+      </div>
+    </div>
+  </section>
+
+
+   <!-- Testimonials -->
+  <section id="testimonials" class="mt-10 max-w-6xl mx-auto">
+    <h2 class="text-3xl font-semibold text-center mb-8">Testimonials</h2>
+    <div id="testiWrapper" class="flex overflow-x-auto gap-6 px-2 pb-4 snap-x snap-mandatory scroll-smooth">
+      <!-- Generated in JS -->
+    </div>
+  </section>
+
+  <!-- Download ZIP -->
+  <section class="py-16 text-center px-6 max-w-6xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight leading-tight">📦 Download My Portfolio</h2>
+    <button id="downloadZip" class="neumorphic py-3 px-8 text-base md:text-lg font-semibold whitespace-nowrap">Download ZIP</button>
+  </section>
+
+ <!-- 📞 Contact -->
+  <section id="contact" class="text-center mt-4 mb-16">
+    <h2 class="text-3xl font-bold mb-4">Let’s Connect</h2>
+    <p class="text-gray-400">Ready to bring your ideas to life — with a soft touch.</p>
+    <a href="mailto:mwas9611@gmail.com" class="neumorphic inline-block bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded-full font-medium text-white transition">
+      Email Me
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-gray-500">© 2025 SoftClay.Dev. Made with pixel‑perfect clay UI.</footer>
+
+<script>
+    // Tailwind CSS configuration
+
+  // Dark/light toggle
+    function toggleDarkMode() {
+        document.body.classList.toggle('bg-gray-900');
+        document.body.classList.toggle('text-white');
+        document.querySelectorAll('.neumorphic, .neumorphic-nav').forEach(el => {
+        el.classList.toggle('bg-gray-800');
+        el.classList.toggle('bg-gray-700');
+        el.classList.toggle('shadow-lg');
+        });
+    }
+
+  // Testimonials list
+  const testimonials = [
+    { text:"“Looks AI-generated – extremely polished and interactive.”", author:"— Product Lead, AI Labs" },
+    { text:"“Incredible soft UI touch and seamless navigation.”", author:"— UX Designer, Nova Studio" },
+    { text:"“Subtle, smooth, and memorable. Clay UI done right.”", author:"— Startup Mentor" },
+  ];
+  const wrap = document.getElementById('testiWrapper');
+  testimonials.forEach(t => {
+    const e = document.createElement('div');
+    e.className = 'neumorphic p-6 min-w-[260px] w-80 rounded-2xl flex-shrink-0';
+    e.innerHTML = `<p class="italic text-sm">${t.text}</p><p class="mt-4 font-semibold text-right">${t.author}</p>`;
+    wrap.appendChild(e);
+  });
+
+  // Auto-scroll testimonials
+  setInterval(() => {
+    wrap.scrollBy({ left: 300, behavior: 'smooth' });
+    if (wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth) wrap.scrollTo({ left: 0, behavior: 'smooth' });
+  }, 4500);
+
+  //projects data
+const projects = [
+  {
+    title: "Mad Navbar UI",
+    desc: "A soft clay-inspired navigation bar with pop-in ripple effect. Built for experimental UI lovers."
+  },
+  {
+    title: "3D Portfolio Playground",
+    desc: "Interactive 3D CSS/Tailwind portfolio with shape animations and object cloning."
+  },
+  {
+    title: "VR Adventure World",
+    desc: "Built using A-Frame and JS, this mini world includes portals, NPCs, and quests in 360°."
+  },
+  {
+    title: "AI Chat Assistant",
+    desc: "Neumorphic design system built using Tailwind."
+  },
+  {
+    title: "VR Puzzle Adventure",
+    desc: "WebXR experience with interactive puzzles."
+  },
+  {
+    title: "Soft Clay UI Kit",
+    desc: "Voice‑enabled chat UI powered by GPT."
+  }
+];
+  // ZIP builder
+  document.getElementById('downloadZip').onclick = async () => {
+    const zip = new JSZip();
+    zip.file("README.txt", "My Soft Clay Portfolio 2025");
+    projects.forEach((p,i) => zip.file(`projects/project${i+1}.txt`, `${p.title}\n\n${p.desc}`));
+    const blob = await zip.generateAsync({type:'blob'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "SoftClayPortfolio.zip";
+    a.click();
+  };
+</script>
+</body>
+</html>

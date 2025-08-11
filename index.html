@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice - Next.js Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #1f2037; /* dark slate */
+            color: #1f2937; /* dark slate */
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .neumorphic {
+            background: #1f2937;
+            box-shadow: 8px 8px 16px #0e121b, -8px -8px 16px #303f59;
+            border-radius: 2rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .neumorphic:active {
+            box-shadow: inset 4px 4px 8px #0e121b, inset -4px -4px 8px #303f59;
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full max-w-xl p-8 bg-gray-50 rounded-xl shadow-lg">
+        <h1 class="text-4xl font-bold text-blue-600 mb-4">Welcome to My Practice Page</h1>
+        <p class="mb-4 text-lg">This is a simple HTML document to practice basic structure.</p>
+        <ul class="list-disc pl-6 mb-6 space-y-1 text-base">
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+        </ul>
+        <div class="space-y-2 mb-6">
+            <p class="text-gray-700">This page is styled using Tailwind CSS.</p>
+            <p class="text-blue-500">You can add more content here.</p>
+            <p class="text-red-500">This is a practice page for learning HTML and CSS.</p>
+            <p class="text-yellow-500">Tailwind CSS makes styling easy and fun!</p>
+            <p class="text-purple-600">Experiment with different classes and styles.</p>
+            <p class="text-green-700">Feel free to click next button</p>
+        </div>
+        <div class="flex gap-4">
+            <button
+                class="neumorphic items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition duration-200"
+                onclick="window.location.href='next.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                Next Page
+            </button>
+            <button
+                class="neumorphic py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition duration-200"
+                onclick="goToSelection()">
+                paySite
+            </button>
+
+            <button
+                class="neumorphic py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition duration-200"
+                onclick="window.location.href='index.html'">>
+                calculator
+            </button>
+        </div>
+    </div>
+
+    <script>
+     function goToSelection() {
+        // Redirect to the selection page
+        window.location.href = 'paySite.html';
+      }
+      
+    </script>
+</body>
+</html>

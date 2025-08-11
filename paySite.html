@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-900 text-white">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi-Step Checkout</title>
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .step { display: none; }
+    .step.active { display: block; }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white font-sans">
+
+  <div class="max-w-lg mx-auto mt-16 bg-gray-800 p-8 rounded-lg shadow-xl" id="checkoutContainer">
+    <h1 class="text-3xl font-bold mb-6 text-center text-purple-400">Multi-Step Checkout</h1>
+
+    <!-- STEP 1: User Info -->
+    <div id="step1" class="step active">
+      <label class="block mb-2">Name</label>
+      <input id="name" type="text" class="w-full mb-4 px-4 py-2 rounded bg-gray-700" placeholder="John Doe">
+
+      <label class="block mb-2">Email</label>
+      <input id="email" type="email" class="w-full mb-4 px-4 py-2 rounded bg-gray-700" placeholder="john@example.com">
+
+      <label class="block mb-2">Phone</label>
+      <input id="phone" type="tel" class="w-full mb-4 px-4 py-2 rounded bg-gray-700" placeholder="0712345678">
+
+      <button onclick="goToStep(2)" class="bg-purple-600 hover:bg-purple-700 text-white w-full py-3 rounded mt-4">Continue</button>
+    </div>
+
+    <!-- STEP 2: Product Selection -->
+    <div id="step2" class="step">
+      <label class="block mb-2">Choose Product</label>
+      <select id="product" class="w-full mb-4 px-4 py-2 rounded bg-gray-700 text-white">
+        <option value="Access">Premium Access</option>
+        <option value="Membership">VIP Membership</option>
+        <option value="Subscription">One-Month Subscription</option>
+      </select>
+
+      <label class="block mb-2">Amount (KES)</label>
+      <input id="amount" type="number" class="w-full mb-4 px-4 py-2 rounded bg-gray-700 text-white" placeholder="Enter any amount">
+
+      <div class="flex gap-4">
+        <button onclick="goToStep(1)" class="w-1/2 py-2 bg-gray-600 hover:bg-gray-700 rounded">Back</button>
+        <button onclick="goToStep(3)" class="w-1/2 py-2 bg-purple-600 hover:bg-purple-700 rounded">Review</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Review & Loader -->
+    <div id="step3" class="step">
+      <h2 class="text-xl font-semibold mb-4">Review your details</h2>
+      <p><strong>Name:</strong> <span id="review-name"></span></p>
+      <p><strong>Email:</strong> <span id="review-email"></span></p>
+      <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+      <p><strong>Product:</strong> <span id="review-product"></span></p>
+      <p><strong>Amount:</strong> KES <span id="review-amount"></span></p>
+
+      <div class="flex gap-4 mt-4">
+        <button onclick="goToStep(2)" class="w-1/2 py-2 bg-gray-600 hover:bg-gray-700 rounded">Back</button>
+        <button onclick="showLoaderAndPay()" class="w-1/2 py-2 bg-green-600 hover:bg-green-700 rounded">Pay Now</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Loader -->
+    <div id="step4" class="step text-center">
+      <div class="loader mb-4 mx-auto border-4 border-purple-400 border-t-transparent rounded-full w-12 h-12 animate-spin"></div>
+      <p class="text-lg">Processing Payment...</p>
+    </div>
+
+    <!-- STEP 5: Thank You -->
+    <div id="step5" class="step text-center">
+      <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Success" class="w-20 mx-auto mb-4 animate-bounce">
+      <h2 class="text-2xl font-bold text-green-400 mb-2">Payment Successful!</h2>
+      <p>Thank you for your order.</p>
+    </div>
+  </div>
+
+  <script>
+    function goToStep(step) {
+      const steps = document.querySelectorAll('.step');
+      steps.forEach(s => s.classList.remove('active'));
+      document.getElementById(`step${step}`).classList.add('active');
+
+      if (step === 3) {
+        document.getElementById("review-name").innerText = document.getElementById("name").value;
+        document.getElementById("review-email").innerText = document.getElementById("email").value;
+        document.getElementById("review-phone").innerText = document.getElementById("phone").value;
+        document.getElementById("review-product").innerText = document.getElementById("product").value;
+        document.getElementById("review-amount").innerText = document.getElementById("amount").value;
+      }
+    }
+
+    function showLoaderAndPay() {
+      goToStep(4);
+      setTimeout(() => {
+        makePayment();
+      }, 2000); // simulate loading
+    }
+
+    function makePayment() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
+      const product = document.getElementById("product").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Invalid amount");
+        goToStep(2);
+        return;
+      }
+
+      FlutterwaveCheckout({
+        public_key: "1d74d2d9-e308-4560-b732-5c20266b1e1a",
+        tx_ref: "TX-" + Date.now(),
+        amount: amount,
+        currency: "KES",
+        payment_options: "card,mpesa,ussd",
+        customer: { email, phonenumber: phone, name },
+        callback: function (data) {
+          // Optional: send data to webhook here
+          sendToWebhook(data);
+          goToStep(5);
+        },
+        onclose: function () {
+          goToStep(3); // Back to review if closed
+        },
+        customizations: {
+          title: product,
+          description: "Secure Payment",
+          logo: "https://via.placeholder.com/100"
+        },
+      });
+    }
+
+    function sendToWebhook(data) {
+      fetch("https://webhook.site/46a210bd-f0ab-4c8c-9f1b-fc4dbe83769b", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).catch(err => console.error("Webhook Error:", err));
+    }
+  </script>
+
+</body>
+</html>
