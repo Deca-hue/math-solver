@@ -50,15 +50,12 @@ practice-site/
 │── README.md         # Project documentation
 📌 Example Projects Included
 
-🎮 Tic Tac Toe Game – HTML, Tailwind, JS
+🎮🧮 Calcutor – HTML, Tailwind, JS
 
-🖌️ CSS Gradient Generator – Tailwind UI, JS interactivity
+📦clay site  – Tailwind UI, JS interactivity
 
-⏳ Countdown Timer – Date-based event timer
+🔏 pay site card – Date-based event timer
 
-🎨 Color Picker Tool – User-friendly UI for picking colors
-
-📅 Interactive Calendar – JavaScript date manipulation
 
 🌐 Live Demo
 
