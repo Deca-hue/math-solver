@@ -19,13 +19,13 @@
 
         .neumorphic {
             background: #1f2937;
-            box-shadow: 8px 8px 16px #0e121b, -8px -8px 16px #303f59;
+            box-shadow: 4px 4px 10px #0e121b, -4px -4px 10px #303f59;
             border-radius: 2rem;
             transition: all 0.2s ease-in-out;
         }
 
         .neumorphic:active {
-            box-shadow: inset 4px 4px 8px #0e121b, inset -4px -4px 8px #303f59;
+            box-shadow: inset 2px 2px 5px #0e121b, inset -2px -2px 5px #303f59;
             transform: scale(0.97);
         }
     </style>
@@ -33,27 +33,22 @@
 <body>
     <div class="w-full max-w-xl p-8 bg-gray-50 rounded-xl shadow-lg">
         <h1 class="text-4xl font-bold text-blue-600 mb-4">Welcome to My Practice Page</h1>
-        <p class="mb-4 text-lg">This is a simple HTML document to practice basic structure.Websites</p>
-        <ul class="list-disc pl-6 mb-6 space-y-1 text-base">
+        <p class="mb-4 text-lg">This is a simple HTML document to practice basic structure <b>{less complex}</b>.Websites</p>
+        <ul class="list-disc pl-6 mb-6 space-y-1 text-base font-bold">
             <li>HTML5</li>
-            <li>TAILWINDCSS</li>
+            <li>TAILWIND CSS</li>
             <li>JAVASCRIPT</li>
         </ul>
         <div class="space-y-2 mb-6">
-            <p class="text-gray-700">This page is styled using Tailwind CSS.</p>
-            <p class="text-blue-500">You can add more content here.</p>
-            <p class="text-red-500">This is a practice page for learning HTML and CSS.</p>
-            <p class="text-yellow-500">Tailwind CSS makes styling easy and fun!</p>
-            <p class="text-purple-600">Experiment with different classes and styles.</p>
-            <p class="text-green-700">Feel free to click next button</p>
+            <p class="text-gray-800">This page is styled using Tailwind CSS.</p>
+            <p class="text-gray-800">Tailwind CSS makes styling easy and fun!</p>
+            <p class="text-gray-800">Experimenting with different classes and styles.</p>
+            <p class="text-red-500 font-semibold">Feel free to click the buttons below🤗</p>
         </div>
         <div class="flex gap-4">
             <button
                 class="neumorphic items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition duration-200"
                 onclick="window.location.href='next.html'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
                CLAY Project
             </button>
             <button
@@ -61,15 +56,15 @@
                 onclick="goToSelection()">
                 paySite
             </button>
-            
+
             <button
                 class="neumorphic py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition duration-200"
-                onclick="window.location.href='calculator.html'">>
+                onclick="window.location.href='calculator.html'">
                 calculator
             </button>
             <button
                 class="neumorphic py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition duration-200"
-                onclick="window.location.href='translator.html'">>
+                onclick="window.location.href='translator.html'">
                 translator</button>
         </div>
     </div>
