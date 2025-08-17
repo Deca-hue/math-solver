@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-900 text-white">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Real-Time Language Translator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Glassmorphism Style */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    /* Loading Spinner */
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { 0% {transform: rotate(0);} 100% {transform: rotate(360deg);} }
+    /* Glow Animation */
+    .glow {
+      animation: glowPulse 1s infinite alternate;
+    }
+    @keyframes glowPulse {
+      0% { box-shadow: 0 0 10px #a855f7; }
+      100% { box-shadow: 0 0 25px #a855f7; }
+    }
+    /* Fade-in Animation */
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+  <!-- Card -->
+  <div class="glass rounded-xl p-6 max-w-lg w-full shadow-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">🌍 Real-Time Translator</h1>
+
+    <!-- Language selectors -->
+    <div class="flex gap-3 mb-4">
+      <select id="inputLang" class="p-2 rounded bg-gray-800 border border-gray-700 flex-1">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="sw">Swahili</option>
+      </select>
+      <button id="swapBtn" class="px-3 bg-yellow-500 hover:bg-yellow-600 rounded">🔄</button>
+      <select id="outputLang" class="p-2 rounded bg-gray-800 border border-gray-700 flex-1">
+        <option value="es">Spanish</option>
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="sw">Swahili</option>
+      </select>
+    </div>
+
+    <!-- Input text -->
+    <textarea id="inputText" rows="3" placeholder="Speak or type here..."
+      class="w-full p-3 mb-3 rounded bg-gray-800 border border-gray-700"></textarea>
+
+    <!-- Output text + copy button -->
+    <div class="flex items-center gap-2 mb-3">
+      <textarea id="outputText" rows="3" placeholder="Translation will appear here..."
+        class="w-full p-3 rounded bg-gray-800 border border-gray-700" readonly></textarea>
+      <button id="copyBtn" class="px-3 py-2 bg-green-600 hover:bg-green-700 rounded">📋</button>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex gap-3 mb-4">
+      <button id="micBtn" class="p-3 flex-1 bg-purple-600 hover:bg-purple-700 rounded">🎙 Speak</button>
+      <button id="translateBtn" class="p-3 flex-1 bg-blue-600 hover:bg-blue-700 rounded flex items-center justify-center gap-2">
+        <span id="translateText">Translate</span>
+        <div id="loadingSpinner" class="spinner hidden"></div>
+      </button>
+      <button id="speakBtn" class="p-3 flex-1 bg-pink-600 hover:bg-pink-700 rounded">🔊 Listen</button>
+    </div>
+
+    <!-- Past translations -->
+    <div>
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-semibold">📝 History</h2>
+        <button id="clearHistoryBtn" class="text-sm text-red-400 hover:text-red-500">Clear</button>
+      </div>
+      <ul id="historyList" class="max-h-40 overflow-y-auto text-sm text-gray-300 space-y-1"></ul>
+    </div>
+  </div>
+
+  <p class="mt-4 text-sm text-gray-500">Powered by Web Speech API & MyMemory API</p>
+
+  <script src="script.js"></script>
+</body>
+</html>
